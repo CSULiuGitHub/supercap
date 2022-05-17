@@ -112,6 +112,8 @@ void PWM_Init(void)
     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
 	
 	  TIM2 ->CCR2=1;
+	  CONTROL_DEVICE_T *control_device_tmp = getControlDevice();
+		control_device_tmp->limit_power = 4500;
 }
 
 
@@ -158,7 +160,8 @@ int main(void)
 	CAN1_FilterInit();
   INA226_Init();
   HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_SET);
-	HAL_TIM_Base_Start_IT(&htim6);
+	
+//	HAL_TIM_Base_Start_IT(&htim6);
 //	TIM1 ->CR1 &=0xfffffcff;
 //	TIM1 ->CR1 |=0x00000400;
   /* USER CODE END 2 */

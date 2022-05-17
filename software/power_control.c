@@ -84,7 +84,7 @@ float err_out2;
 void PowerControlRun(void)
 {
     powerControlInit();
-	if (ControlDevice.Cap.cur_voltage<1200) ControlDevice.cap_enable=1;
+//	if (ControlDevice.Cap.cur_voltage<1200) ControlDevice.cap_enable=1;
 	  capTransmit();
     capSwitchScan();
   err_out2 = 0.01f*(ControlDevice.limit_power + ControlDevice.remain_energy*0.01f - ControlDevice.Bat.cur_power);
