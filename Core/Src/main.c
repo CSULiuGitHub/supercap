@@ -114,6 +114,7 @@ void PWM_Init(void)
 	  TIM2 ->CCR2=1;
 	  CONTROL_DEVICE_T *control_device_tmp = getControlDevice();
 		control_device_tmp->limit_power = 4500;
+	  control_device_tmp->remain_energy =60;
 }
 
 

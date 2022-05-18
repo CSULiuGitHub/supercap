@@ -81,6 +81,7 @@ void cap_charge_control()
 //uint16_t final_out;
 float err_out;
 float err_out2;
+float err_out3;
 void PowerControlRun(void)
 {
     powerControlInit();
@@ -103,11 +104,18 @@ void PowerControlRun(void)
 	}
 	 if (ControlDevice.Cap.cur_voltage>=590)
 	 {
-	 err_out = 0.7f*(ControlDevice.Cap.tar_power-ControlDevice.Cap.cur_power);
+		 if(ControlDevice.Cap.tar_power < ControlDevice.Cap.cur_power)
+		 {
+		 err_out3= -(ControlDevice.Cap.tar_power/100-ControlDevice.Cap.cur_power/100)^2;
+		 }
+		 else err_out3=0;
+	   err_out = 0.7f*(ControlDevice.Cap.tar_power-ControlDevice.Cap.cur_power);
 	 }
 	 err_out = constrainFloat(err_out, -7, 3);
-	 ControlDevice.Cap.output += err_out;
+	 err_out3 = constrainFloat(err_out3, -1000, 0);
+	 ControlDevice.Cap.output += err_out+err_out3;
 	 ControlDevice.Cap.output = constrainUint16(ControlDevice.Cap.output, 0, 3780);
+	 if (ControlDevice.remain_energy<10) ControlDevice.Cap.output=1100;
 	if (ControlDevice.Bat.cur_voltage<100) 
 	{
 		ControlDevice.Cap.tar_power = ControlDevice.limit_power-900;
