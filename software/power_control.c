@@ -113,9 +113,9 @@ void PowerControlRun(void)
 	 }
 	 err_out = constrainFloat(err_out, -7, 3);
 	 err_out3 = constrainFloat(err_out3, -1000, 0);
-	 ControlDevice.Cap.output += err_out+err_out3;
+	 ControlDevice.Cap.output += err_out+0.07f*err_out3;
 	 ControlDevice.Cap.output = constrainUint16(ControlDevice.Cap.output, 0, 3780);
-	 if (ControlDevice.remain_energy<10) ControlDevice.Cap.output=1100;
+	 if (ControlDevice.remain_energy<8) ControlDevice.Cap.output=1100;
 	if (ControlDevice.Bat.cur_voltage<100) 
 	{
 		ControlDevice.Cap.tar_power = ControlDevice.limit_power-900;
