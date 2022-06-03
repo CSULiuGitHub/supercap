@@ -114,7 +114,7 @@ void PowerControlRun(void)
 	 err_out = constrainFloat(err_out, -7, 3);
 	 err_out3 = constrainFloat(err_out3, -1000, 0);
 	 ControlDevice.Cap.output += err_out+0.07f*err_out3;
-	 ControlDevice.Cap.output = constrainUint16(ControlDevice.Cap.output, 0, 3780);
+	 ControlDevice.Cap.output = constrainUint16(ControlDevice.Cap.output, 0, 4150);
 	 if (ControlDevice.remain_energy<8) ControlDevice.Cap.output=1100;
 	if (ControlDevice.Bat.cur_voltage<100) 
 	{
@@ -131,7 +131,7 @@ void PowerControlRun(void)
 //    ControlDevice.Cap.output 
 //    = constrainUint16(ControlDevice.Cap.output, 0, 2098);
     
-    TIM2->CCR2 = ControlDevice.Cap.output/5;
+    TIM2->CCR2 = ControlDevice.Cap.output;
 	
 }
 
