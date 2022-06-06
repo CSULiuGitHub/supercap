@@ -72,7 +72,7 @@ void cap_charge_control()
 	pwm2_err = constrainFloat(pwm2_err, -100, 1);
 	pwm2_output += pwm2_err;
 
-    pwm_lim = constrainUint16(4198*ControlDevice.Cap.cur_voltage/2400 + 3500, 0, 4198);
+    pwm_lim = constrainUint16(4198*ControlDevice.Cap.cur_voltage/2400 + 3500, 0, 3780);
 	pwm2_output = constrainUint16(pwm2_output, 0, pwm_lim);
 //    pwm2_output = 800;
 	TIM2->CCR1=pwm2_output;
@@ -82,6 +82,7 @@ void cap_charge_control()
 float err_out;
 float err_out2;
 float err_out3;
+uint16_t transfer;
 void PowerControlRun(void)
 {
     powerControlInit();
@@ -92,17 +93,18 @@ void PowerControlRun(void)
 	err_out2 = constrainFloat(err_out2, -40, 8);
 	ControlDevice.Cap.tar_power +=err_out2;
 	ControlDevice.Cap.tar_power = constrainUint16(ControlDevice.Cap.tar_power, 0, ControlDevice.limit_power-900);
+	ControlDevice.Cap.tar_power = constrainUint16(ControlDevice.Cap.tar_power, 0, 12000);
 //    ControlDevice.chassis_power_obser 
 //    = 0.5f*ControlDevice.chassis_power + 0.5f*ControlDevice.battery_power - ControlDevice.Cap.cur_power;
 //    
 //    ControlDevice.Cap.tar_power 
 //    = ControlDevice.limit_power + ControlDevice.remain_energy*0.01f - ControlDevice.chassis_power_obser;
-    
-	  if (ControlDevice.Cap.cur_voltage<590) 
+    transfer=ControlDevice.Cap.tar_power/9;
+	  if (ControlDevice.Cap.cur_voltage<transfer) 
 	{
 		err_out = 0.07f* (9000-ControlDevice.Cap.cur_current);
 	}
-	 if (ControlDevice.Cap.cur_voltage>=590)
+	 if (ControlDevice.Cap.cur_voltage>=transfer)
 	 {
 		 if(ControlDevice.Cap.tar_power < ControlDevice.Cap.cur_power)
 		 {
@@ -115,7 +117,7 @@ void PowerControlRun(void)
 	 err_out3 = constrainFloat(err_out3, -1000, 0);
 	 ControlDevice.Cap.output += err_out+0.07f*err_out3;
 	 ControlDevice.Cap.output = constrainUint16(ControlDevice.Cap.output, 0, 4120);
-	 if (ControlDevice.remain_energy<8) ControlDevice.Cap.output=1100;
+	 if (ControlDevice.remain_energy<8) ControlDevice.Cap.output=500;
 	if (ControlDevice.Bat.cur_voltage<100) 
 	{
 		ControlDevice.Cap.tar_power = ControlDevice.limit_power-900;
